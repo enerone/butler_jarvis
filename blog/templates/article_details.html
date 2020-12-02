@@ -1,4 +1,6 @@
 {% extends 'base.html' %} 
+{% load static %}
+
 {% block title %} Cultivoloco - {{ post.title_tag }} {% endblock %} 
 
 {% block content %}
@@ -17,6 +19,9 @@
     {% endif %}    
 </small><br/>
 <hr>
+{% if post.header_image %}
+<img src="{{ post.header_image.url }}" >
+{% endif %}
 <p>{{ post.body|safe }}</p>
 
 <br/>
@@ -39,5 +44,44 @@
     {% endif %}
      - {{ total_likes }} likes
 </form>
+<br/><br/>
+<div class="card mb-3">
+  <div class="row no-gutters">
+    <div class="col-md-2">
+    {% if post.author.profile.profile_picture %}
+        <img src="{{ post.author.profile.profile_picture.url }}" class="card-img" alt="...">
+    {% else %}
+        <img src="{% static 'blog/images/default.jpg' %}" class="card-img" alt="...">
+    {% endif %}
+    </div>
+    <div class="col-md-10">
+      <div class="card-body">
+        <h5 class="card-title">{{ post.author.first_name }}, {{ post.author.last_name }}</h5>
+        <p class="card-text">
+        <small class="text-muted">
+            {% if post.author.profile.website_url %}
+                <a href="{{post.author.profile.website_url}}">cultivoloco.blogspot.com</a>
+            {% endif %}
+            {% if post.author.profile.facebook_url %}
+                | <a href="{{post.author.profile.facebook_url}}">Facebook</a>
+            {% endif %}
+            {% if post.author.profile.instagram_url %}
+                | <a href="{{post.author.profile.instagram_url}}">Instagram</a> 
+            {% endif %}
+            {% if post.author.profile.twitter_url %}
+                | <a href="{{post.author.profile.twitter_url}}">Twitter</a>
+            {% endif %}
+            {% if post.author.profile.pinterest_url %}
+                | <a href="{{post.author.profile.pinterest_url}}">Pinterest</a>
+            {% endif %}
+        </small>
+        </p>
+        <p class="card-text">{{post.author.profile.bio}}</p>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
