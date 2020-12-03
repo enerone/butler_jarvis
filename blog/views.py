@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from . models import Post, Category
-from . forms import PostForm, EditForm
+from . models import Post, Category, Comment
+from . forms import PostForm, EditForm, CommentForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 
@@ -20,7 +20,6 @@ def LikeView(request, pk):
 class HomeView(ListView):
     model = Post
     template_name = 'home.html'
-    #ordering = ['-id']
     ordering = ['-post_date', '-id']
     
     def get_context_data(self, *args, **kwargs):
@@ -61,6 +60,16 @@ class AddPostView(CreateView):
     form_class = PostForm
     template_name = 'add_post.html'
     #fields = '__all__'
+    
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'add_post.html'
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form) 
     
 class AddCategoryView(CreateView):
     model = Category
