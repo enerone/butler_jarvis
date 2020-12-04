@@ -4,6 +4,7 @@ from . models import Post, Category, Comment
 from . forms import PostForm, EditForm, CommentForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 
 def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
@@ -28,8 +29,39 @@ class HomeView(ListView):
         context["cat_menu"] = cat_menu
         return context
     
+'''def SearchView(request):
+    if request.method == 'GET':
+        search =  request.GET.get('search')
+        search_posts = Post.objects.filter(title=search)
+    #import pdb; pdb.set_trace()
+    return render(request,'search.html', {"query":search, "search_posts":search_posts})
+'''
+
+
+def SearchView(request):
+    if request.method == 'GET':
+        query= request.GET.get('q')
+        submitbutton= request.GET.get('submit')
+
+        if query is not None:
+            lookups= Q(title__icontains=query) | Q(body__icontains=query)
+
+            results= Post.objects.filter(lookups).distinct()
+
+            context={'search_posts': results,'query': query}
+
+            return render(request, 'search.html', context)
+
+        else:
+            return render(request, 'search.html')
+
+    else:
+        return render(request, 'search.html')
+    
+    
 def CategoryView(request, cats):
     category_posts = Post.objects.filter(category=cats.replace('-', ' '))
+    #import pdb; pdb.set_trace()
     return render(request,'categories.html', {"cats":cats.title().replace('-', ' '), "category_posts":category_posts})
 
 def CategoryListView(request):

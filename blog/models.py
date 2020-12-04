@@ -11,6 +11,8 @@ class Category(models.Model):
     
     def get_absolute_url(self):
         return reverse('home')
+        class Meta:
+          verbose_name_plural = "categories"
     
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)

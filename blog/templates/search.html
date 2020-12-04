@@ -1,7 +1,10 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Post</h1>
 
-    {% for post in object_list %}
+{% if search_posts %}
+
+<h1>Search terms: {{ query  }} </h1>
+
+     {% for post in search_posts %}
 
     
     <div class="card mb-3">
@@ -35,4 +38,8 @@
     {% endfor %}
 
 
-{% endblock %}
+{% else %}
+    search was unsuccessful
+{% endif %}
+
+{% endblock %} 
